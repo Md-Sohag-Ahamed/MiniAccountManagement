@@ -1,0 +1,68 @@
+﻿@using System.Security.Claims
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Account Management</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+</head>
+<body>
+    @{
+        // This C# code gets the current page path to highlight the active link
+        var currentPage = ViewContext.RouteData.Values["page"]?.ToString() ?? "";
+    }
+    <nav class="navbar navbar-expand navbar-light bg-white shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand" asp-page="/dashboard">
+                <i class="fas fa-calculator me-2"></i>Mini Account Management
+            </a>
+            <partial name="_LoginPartial" />
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 p-0">
+                <div class="sidebar p-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link @(currentPage == "/Index" ? "active" : "")" asp-page="/dashboard"><i class="fas fa-home"></i> Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentPage.StartsWith("/Vouchers") ? "active" : "")" asp-page="/Vouchers/Index"><i class="fas fa-file-invoice-dollar"></i> Vouchers</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentPage.StartsWith("/ChartOfAccounts") ? "active" : "")" asp-page="/ChartOfAccounts/Index"><i class="fas fa-sitemap"></i> Chart of Accounts</a>
+                        </li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link @(currentPage.StartsWith("/Admin") ? "active" : "")" asp-page="/Admin/UserManagement"><i class="fas fa-users-cog"></i> User Management</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+
+            <main role="main" class="col-md-10 p-4 content-area">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <partial name="_Notification" />
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
